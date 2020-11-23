@@ -1,19 +1,26 @@
 import VueRouter from 'vue-router'
 import Tetris from './pages/tetris'
 import Pjathashki from './pages/pjatnashki'
+import Home from './pages/home'
 
 
 export default new VueRouter({
     routes: [
         {
-            name: 'Тетрис',
+            name: 'Главная',
             path: '/',
-            component: Tetris,
+            component: Home,
+            hidden: true,
         },
         {
             name: 'Пятнашки',
-            path: '/game2',
+            path: '/game1',
             component: Pjathashki,
+        },
+        {
+            name: 'Тетрис',
+            path: '/game2',
+            component: Tetris,
         },
     ],
 })

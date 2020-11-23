@@ -1,6 +1,10 @@
 <template>
     <div>
-        <h2>Пятнашки</h2>
+        <div class="header">
+            <h2>Пятнашки</h2>
+            <Timer :on="start" :clear="clearTime" @time="getTime" />
+        </div>
+
         <div class="buttons">
             <div class="button" @click="shuffleMatrix">Перемешать</div>
             <div class="button" @click="() => changeMatrix(3)">3 x 3</div>
@@ -8,12 +12,17 @@
             <div class="button" @click="() => changeMatrix(5)">5 x 5</div>
         </div>
         <div class="body-game">
-            <div class="fishka" :class="getFishkaClasses(f, type)" v-for="(f, index) of getMatrix" @click="() => move(index)">{{f}}</div>
+            <div class="fishka" :class="getFishkaClasses(f, type)" v-for="(f, index) of getMatrix" @click="() => move(index)">
+                <span class="number">{{f}}</span>
+            </div>
         </div>
     </div>
 </template>
 
 <script>
+    import {isEqualArray} from "../utils";
+    import Timer from '../components/timer';
+
     const matrix3 = [1,2,3,4,5,6,7,8,''];
     const matrix4 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,''];
     const matrix5 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,''];
@@ -33,10 +42,16 @@
     }
     export default {
         name: "Pjatnashki",
+        components: {
+            Timer
+        },
         data() {
             return {
                 matrix: [],
                 type: 4,
+                start: false,
+                clearTime: false,
+                timeGame: ''
             }
         },
         computed: {
@@ -45,6 +60,9 @@
             }
         },
         methods: {
+            getTime(time) {
+                this.timeGame = time;
+            },
             getFishkaClasses(f, type) {
                 let classes = ['fishka'];
                 if (!f) {
@@ -63,10 +81,16 @@
             },
             shuffleMatrix() {
                 this.matrix = shuffle(this.matrix);
+                this.start = false;
+                this.clearTime = true;
+                setTimeout(() => {
+                    this.start = true;
+                    this.clearTime = false;
+                }, 100)
             },
             changeMatrix(type) {
                 this.type = type;
-                this.matrix = matrixes[type-3];
+                this.matrix = [...matrixes[type-3]];
             },
             move(index) {
                 const move3 = [
@@ -76,7 +100,7 @@
                 ];
 
                 const move4 = [
-                    [1,4], [0,2,5], [1,3.6], [2,7],
+                    [1,4], [0,2,5], [1,3,6], [2,7],
                     [0,5,8], [1,4,6,9], [2,5,7,10], [3,6,11],
                     [4,9,12], [5,8,10,13], [6,9,11,14], [7,10,15],
                     [8,13], [9,12,14], [10,13,15], [11,14]
@@ -94,10 +118,14 @@
                     this.findZero(indexZero, index);
                 });
                 this.$forceUpdate();
+                console.log(isEqualArray(matrixes[this.type-3], this.matrix));
+                if (isEqualArray(matrixes[this.type-3], this.matrix)) {
+                    alert(`WELL DONE! you win for ${this.timeGame}`)
+                }
             },
         },
         created() {
-            this.matrix = matrix4;
+            this.matrix = [...matrix4];
         }
     }
 </script>
@@ -105,9 +133,16 @@
 <style scoped lang="less">
     @color: #caa365;
     @border: darken(@color, 10);
+    .header {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
     .buttons {
         width: 100%;
         display: flex;
+        flex-wrap: wrap;
         .button {
             margin-right: 10px;
             background-color: @color;
@@ -126,12 +161,19 @@
                 margin-top: 4px;
                 border-bottom: none;
             }
+            @media screen and (max-width: 600px) {
+                width: 100%;
+                text-align: center;
+                margin-bottom: 10px;
+                margin-right: 0;
+            }
         }
     }
     .body-game {
         padding: 5px;
-        width: 600px;
-        height: 600px;
+        max-width: 600px;
+        width: 100%;
+        /*max-height: 600px;*/
         background-color: @color;
         margin: 50px auto;
         border: 30px solid @border;
@@ -139,6 +181,7 @@
         display: flex;
         flex-wrap: wrap;
         justify-content: space-between;
+        position: relative;
     }
     .fishka {
 
@@ -150,20 +193,52 @@
         cursor: pointer;
         user-select: none;
         border-radius: 7px;
+        .number {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            top: 0;
+            left: 0;
+            align-content: center;
+            align-items: center;
+            justify-content: center;
+        }
+
+        position: relative;
+        &:before {
+            content: '';
+            display: block;
+            width: 100%;
+            padding-bottom: 100%;
+        }
+
         &-3 {
             width: (600px - 80px) / 3;
-            height: (600px - 80px) / 3;
-            line-height: 500px / 3;
+            @media screen and (max-width: 768px) {
+                width: (100% / 3) - 1px;
+                margin-bottom: 2px;
+            }
         }
         &-4 {
             width: (600px - 80px) / 4;
-            height: (600px - 80px) / 4;
-            line-height: 500px / 4;
+            @media screen and (max-width: 768px) {
+                width: (100% / 4) - 1px;
+                margin-bottom: 2px;
+                .number {
+                    font-size: 22px;
+                }
+            }
         }
         &-5 {
             width: (600px - 80px) / 5;
-            height: (600px - 80px) / 5;
-            line-height: 500px / 5;
+            @media screen and (max-width: 768px) {
+                width: (100% / 5) - 1px;
+                margin-bottom: 2px;
+                .number {
+                    font-size: 18px;
+                }
+            }
         }
         &.zero {
             border: none;
