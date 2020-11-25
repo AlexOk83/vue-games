@@ -2,7 +2,7 @@
     <div>
         <div class="header">
             <h2>Пятнашки</h2>
-            <Timer :on="start" :clear="clearTime" @time="getTime" />
+            <Timer :button-hidden="true" :on="start" :clear="clearTime" @time="getTime" />
         </div>
 
         <div class="buttons">

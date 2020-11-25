@@ -29,3 +29,4 @@ retail-client-release.war
 retail-client-release-sources.zip
 *.sublime-workspace
 coverage
+/dist/build.js
