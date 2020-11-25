@@ -26,3 +26,7 @@ export function up(minutes, limit) {
 export function randomInt(min, max) {
     return min + Math.floor((max - min) * Math.random());
 }
+
+export function isNil(el) {
+    return el === undefined
+}
