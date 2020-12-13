@@ -1,44 +1,56 @@
 <template>
     <div class="center">
-        <div class="platforma">
-            <div class="line" v-for="line in getField">
-                <div class="box" v-for="box in line" :class="{ 'active': box }"/>
-            </div>
-        </div>
-        <div class="panel-managment">
-            <div class="table-count">{{ count }}</div>
-            <div class="btn" @click="newGame">Новая игра</div>
-            <div class="btn" @click="toggleGame">{{isStopGame ? 'Продолжить игру' : 'Поставить на паузу' }}</div>
-        </div>
-        <div class="joystic">
-            <div class="arrow arrow-up" @click="() => {
-                this.rotatefigure();
-            }"/>
-            <div class="arrow arrow-down" @click="() => {
-                this.canMoveDown().then(canMove => {
-                    if (canMove) {
-                        this.moveFigureDown();
-                    }
-                });
-            }" />
-            <div class="arrow arrow-left" @click="() => {
-                this.canMoveLeft().then(fine => {
+        <div class="display">
+            <div class="platforma">
+                <div class="line" v-for="line in getField">
+                    <div class="box" v-for="box in line" :class="{ 'active': box }"/>
+                </div>
+                <div class="btn-left" :class="{'hide' : isGame}" @click="() => {
+                    this.canMoveLeft().then(fine => {
                     if (fine === 0) {
                         this.moveFigureLeft();
                     }
                 })
-            }" />
-            <div class="arrow arrow-right" @click="() => {
-                this.canMoveRight().then(fine => {
+                 }">left</div>
+                <div class="btn-right" :class="{'hide' : isGame}" @click="() => {
+                    this.canMoveRight().then(fine => {
                     if (fine === 0) {
                         this.moveFigureRight();
                     }
                 })
-            }"/>
-            <div class="btn btn-new" @click="newGame"/>
-            <div class="btn btn-pause" @click="toggleGame"/>
+                 }">right</div>
+                <div class="btn-rotate" :class="{'hide' : isGame}" @click="() => { this.rotatefigure(); }">rotate</div>
+                <div class="btn-down" :class="{'hide' : isGame}" @click="() => {
+                    this.canMoveDown().then(canMove => {
+                        if (canMove) {
+                            this.moveFigureDown();
+                        }
+                    });
+                }">down</div>
 
-
+            </div>
+            <div class="table">
+                <div class="table__field">
+                    <div class="label">Очки</div>
+                    <div class="count">{{ count }}</div>
+                </div>
+                <div class="table__field">
+                    <div class="label">Убрано</div>
+                    <div class="count">{{ countLine }}</div>
+                </div>
+                <div class="table__field">
+                    <div class="label">Уровень</div>
+                    <div class="count">{{ level }}</div>
+                </div>
+                <div class="table__field">
+                    <div class="label">Следующая</div>
+                    <div class="line" v-for="line in nextBox">
+                        <div class="box" v-for="box in line" :class="{ 'active': box }"/>
+                    </div>
+                </div>
+                <div class="btn" @click="newGame">Новая игра</div>
+                <div class="btn" @click="toggleGame">{{isStopGame ? 'Продолжить' : 'на паузу' }}</div>
+            </div>
         </div>
     </div>
 
@@ -99,13 +111,50 @@
                     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
                 ],
 
+                f7: [
+                    [0, 0, 0, 0, 0, 1, 1, 0, 0, 0],
+                    [0, 0, 0, 0, 1, 1, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                ],
+
+                f8: [
+                    [0, 0, 0, 0, 1, 0, 1, 0, 0, 0],
+                    [0, 0, 0, 0, 1, 1, 1, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 1, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                ],
+
+                f9: [
+                    [0, 0, 0, 0, 0, 1, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 1, 1, 1, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 1, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                ],
+
+                f10: [
+                    [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                ],
+
+                f11: [
+                    [0, 0, 0, 1, 1, 0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 1, 1, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                ],
+
                 interval: null,
                 count: 0,
+                countLine: 0,
                 level: 1,
                 isStopGame: false,
                 waiting: false,
                 gameOver: false,
                 typeFigure: null,
+                typeNextFigure: null,
                 posFigure: 0,
                 field: [
                     [0, 3, 0, 0, 3, 0, 0, 0, 3, 0],
@@ -129,7 +178,8 @@
                     [3, 0, 0, 3, 0, 3, 0, 0, 3, 0],
                     [0, 3, 3, 0, 0, 0, 3, 3, 0, 0],
                     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-                ]
+                ],
+                nextBox: [],
             }
         },
         computed: {
@@ -144,8 +194,16 @@
                     this.f4,
                     this.f5,
                     this.f6,
+                    this.f7,
+                    this.f8,
+                    this.f9,
+                    this.f10,
+                    this.f11,
                 ]
             },
+            isGame() {
+                return !this.isStopGame && this.interval !== null;
+            }
         },
         methods: {
             newGame() {
@@ -178,11 +236,20 @@
                 this.level = 1;
                 this.gameOver = false;
                 clearInterval(this.interval);
+                this.nextFigure(true);
                 this.createFigure();
                 this.startGame(1000);
             },
+            nextFigure(start) {
+                this.typeNextFigure = randomInt(0, 11);
+                if (!start) {
+                    this.nextBox = VARIANS[this.typeNextFigure][0];
+                } else {
+
+                }
+            },
             createFigure() {
-                this.typeFigure = randomInt(0, 6);
+                this.typeFigure = this.typeNextFigure;
                 this.posFigure = 0;
                 const f = this.getFigures[this.typeFigure];
                 for (let line = 0; line < 4; line++) {
@@ -193,6 +260,7 @@
                     })
                     this.field[line] = f[line].slice(0, f[line].length);
                 }
+                this.nextFigure();
                 this.$forceUpdate();
                 this.waiting = false;
             },
@@ -226,9 +294,10 @@
                     });
                     if (count === len) {
                         indexesRemove.push(index);
-                        this.count = this.count + 10 * this.level;
-                        if (this.count > 100 * this.level) {
-                            this.level++;
+                        this.countLine = this.countLine + 1;
+                        this.count = this.count + (10 * this.level);
+                        if (this.count > 1000 * this.level) {
+                            this.level = this.level + 1;
                         }
                     }
                 });
@@ -339,6 +408,7 @@
                     this.waiting = true;
                     this.field = this.field.map(line => line.map(box => {
                         if (box === 1) {
+                            this.count = this.count + this.level;
                             return 3;
                         }
 
@@ -475,175 +545,6 @@
 </script>
 
 <style scoped lang="less">
-    .center {
-        display: flex;
-        justify-content: center;
-        flex-wrap: wrap;
-        align-items: flex-start;
-        height: calc(100vh - 80px);
-    }
-
-    .panel-managment {
-        width: 300px;
-        margin-top: 25px;
-        margin-left: 30px;
-        border: 1px solid Black;
-        padding: 20px;
-        @media screen and (max-width: 768px) {
-            display: none;
-        }
-
-        .table-count {
-            border: 1px solid #ccc;
-            text-align: right;
-            font-style: italic;
-            padding: 5px 15px;
-            font-size: 20px;
-            font-family: "Arial Black", serif;
-        }
-
-        .btn {
-            text-align: center;
-            width: 100%;
-            background-color: #cccccc;
-            margin-top: 10px;
-            text-transform: uppercase;
-            font-weight: bold;
-            cursor: pointer;
-            user-select: none;
-            border-bottom: 4px solid darken(#ccc, 10);
-
-            &:hover {
-                background-color: darken(#ccc, 10);
-            }
-
-            &:active {
-                margin-top: 14px;
-                border-bottom: 0;
-            }
-        }
-    }
-
-    .platforma {
-        margin-top: 25px;
-        border: 2px solid #6f6a5e;
-        padding: 5px;
-
-        .line {
-            display: flex;
-
-            .box {
-                width: 30px;
-                height: 30px;
-                border: 1px solid #ccc;
-                padding: 5px;
-                opacity: 0.5;
-                @media screen and (max-width: 768px) {
-                    width: 20px;
-                    height: 20px;
-                }
-
-                &:before {
-                    content: '';
-                    width: 100%;
-                    height: 100%;
-                    display: block;
-                    background-color: #ccc;
-                }
-
-                &.active {
-                    opacity: 1;
-
-                    &:before {
-                        background-color: #1b1e21;
-                    }
-                }
-            }
-        }
-    }
-
-    .joystic {
-        display: none;
-        @media screen and (max-width: 768px) {
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            width: 100%;
-            height: 100px;
-            position: fixed;
-            left: 0;
-            bottom: 0;
-            background-color: #ccc;
-        }
-
-        .arrow {
-            width: 40px;
-            height: 40px;
-            border: 1px solid black;
-            text-align: center;
-            line-height: 30px;
-            font-size: 40px;
-
-            &-left {
-                &:before {
-                    content: '\2190';
-                    display: inline-block;
-                }
-            }
-
-            &-right {
-                &:before {
-                    content: '\2192';
-                    display: inline-block;
-                }
-            }
-
-            &-up {
-                &:before {
-                    content: '\2191';
-                    display: inline-block;
-                }
-            }
-
-            &-down {
-                &:before {
-                    content: '\2193';
-                    display: inline-block;
-                }
-            }
-        }
-
-        .btn {
-            width: 60px;
-            height: 60px;
-            border: 1px solid black;
-            border-radius: 50%;
-            box-shadow: inset 2px 2px 4px rgba(black, 0.5);
-            cursor: pointer;
-
-            &:before {
-                line-height: 45px;
-                text-transform: uppercase;
-                font-size: 12px;
-                font-weight: bold;
-            }
-
-            &-new {
-                background-color: #29e34f;
-
-                &:before {
-                    content: 'start';
-                }
-            }
-
-            &-pause {
-                background-color: #2973e3;
-
-                &:before {
-                    content: 'pause';
-                }
-            }
-        }
-    }
+    @import "../styles/tetris";
 
 </style>

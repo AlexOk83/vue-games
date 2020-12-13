@@ -1,0 +1,160 @@
+.center {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  height: calc(100vh - 80px);
+  padding-top: 25px;
+  @media screen and (max-width: 768px) {
+    padding-top: 0;
+  }
+}
+
+.display {
+  display: flex;
+  padding: 10px;
+  box-shadow: inset 0 0 5px rgba(black, 0.4);
+  @media screen and (max-width: 768px) {
+    box-shadow: none;
+    flex-wrap: wrap;
+    flex-direction: column-reverse;
+  }
+}
+
+.platforma {
+  border: 2px solid #6f6a5e;
+  padding: 5px;
+  position: relative;
+}
+
+.line {
+  display: flex;
+
+  .box {
+    width: 30px;
+    height: 30px;
+    border: 1px solid #ccc;
+    padding: 5px;
+    opacity: 0.5;
+    @media screen and (max-width: 768px) {
+      width: 9vw;
+      height: 9vw;
+      padding: 2px;
+    }
+
+    &:before {
+      content: '';
+      width: 100%;
+      height: 100%;
+      display: block;
+      background-color: #ccc;
+    }
+
+    &.active {
+      opacity: 1;
+
+      &:before {
+        background-color: #1b1e21;
+      }
+    }
+  }
+}
+
+.table {
+  width: 180px;
+  display: block;
+  padding: 0 10px;
+  @media screen and (max-width: 768px) {
+    width: 100%;
+    padding: 20px;
+  }
+  &__field {
+    width: 100%;
+    margin-bottom: 10px;
+    .label {
+      font-size: 18px;
+      font-weight: 500;
+    }
+    .count {
+      text-align: right;
+      font-size: 24px;
+      font-style: italic;
+      box-shadow: inset 0 0 5px rgba(black, 0.4);
+      padding-right: 10px;
+    }
+  }
+}
+
+.btn {
+  text-align: center;
+  width: 100%;
+  background-color: #cccccc;
+  margin-top: 10px;
+  text-transform: uppercase;
+  font-weight: bold;
+  cursor: pointer;
+  user-select: none;
+  border-bottom: 4px solid darken(#ccc, 10);
+  @media screen and (max-width: 768px) {
+    font-size: 12px;
+  }
+
+  &:hover {
+    background-color: darken(#ccc, 10);
+  }
+
+  &:active {
+    margin-top: 14px;
+    border-bottom: 0;
+  }
+
+  &-left {
+    width: 20%;
+    height: 100%;
+    top: 0;
+    left: 0;
+  }
+
+  &-right {
+    width: 20%;
+    height: 100%;
+    top: 0;
+    right: 0;
+  }
+
+  &-rotate {
+    width: 60%;
+    height: 50%;
+    top: 0;
+    left: 20%;
+  }
+
+  &-down {
+    width: 60%;
+    height: 50%;
+    bottom: 0;
+    left: 20%;
+  }
+}
+
+.btn-left,
+.btn-right,
+.btn-rotate,
+.btn-down {
+  background-color: rgba(grey, 0.5);
+  position: absolute;
+  z-index: 20;
+  color: white;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  text-transform: uppercase;
+  border: 1px solid white;
+  user-select: none;
+  @media screen and (max-width: 768px) {
+    display: flex;
+  }
+  &.hide {
+    opacity: 0;
+  }
+}
