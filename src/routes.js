@@ -2,6 +2,7 @@ import VueRouter from 'vue-router'
 import Tetris from './pages/tetris'
 import Pjathashki from './pages/pjatnashki'
 import Home from './pages/home'
+import TicTac from './pages/ticTacToe'
 
 
 export default new VueRouter({
@@ -21,6 +22,11 @@ export default new VueRouter({
             name: 'Тетрис',
             path: '/game2',
             component: Tetris,
+        },
+        {
+            name: 'Крестики - нолики',
+            path: '/game3',
+            component: TicTac,
         },
     ],
 })

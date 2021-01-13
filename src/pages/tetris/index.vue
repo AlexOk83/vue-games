@@ -5,29 +5,6 @@
                 <div class="line" v-for="line in getField">
                     <div class="box" v-for="box in line" :class="{ 'active': box }"/>
                 </div>
-                <div class="btn-left" :class="{'hide' : isGame}" @click="() => {
-                    this.canMoveLeft().then(fine => {
-                    if (fine === 0) {
-                        this.moveFigureLeft();
-                    }
-                })
-                 }">left</div>
-                <div class="btn-right" :class="{'hide' : isGame}" @click="() => {
-                    this.canMoveRight().then(fine => {
-                    if (fine === 0) {
-                        this.moveFigureRight();
-                    }
-                })
-                 }">right</div>
-                <div class="btn-rotate" :class="{'hide' : isGame}" @click="() => { this.rotatefigure(); }">rotate</div>
-                <div class="btn-down" :class="{'hide' : isGame}" @click="() => {
-                    this.canMoveDown().then(canMove => {
-                        if (canMove) {
-                            this.moveFigureDown();
-                        }
-                    });
-                }">down</div>
-
             </div>
             <div class="table">
                 <div class="table__field">
@@ -52,18 +29,47 @@
                 <div class="btn" @click="toggleGame">{{isStopGame ? 'Продолжить' : 'на паузу' }}</div>
             </div>
         </div>
+        <div class="btn-left" :class="{'hide' : isGame}" @click="() => {
+                    this.canMoveLeft().then(fine => {
+                    if (fine === 0) {
+                        this.moveFigureLeft();
+                    }
+                })
+                 }">left
+        </div>
+        <div class="btn-right" :class="{'hide' : isGame}" @click="() => {
+                    this.canMoveRight().then(fine => {
+                    if (fine === 0) {
+                        this.moveFigureRight();
+                    }
+                })
+                 }">right
+        </div>
+        <div class="btn-rotate" :class="{'hide' : isGame}" @click="() => { this.rotatefigure(); }">rotate</div>
+        <div class="btn-down" :class="{'hide' : isGame}" @click="() => {
+                    this.canMoveDown().then(canMove => {
+                        if (canMove) {
+                            this.moveFigureDown();
+                        }
+                    });
+                }">down
+        </div>
     </div>
 
 </template>
 
 <script>
-    import {NEW_LINE, VARIANS} from "../constants";
-    import {randomInt} from "../utils";
+    import {
+        NEW_LINE,
+        VARIANS,
+        ARROW_LEFT,
+        ARROW_RIGHT,
+        ARROW_DOWN,
+        ARROW_UP,
+        SPACE,
+    } from "./constants";
+    import {randomInt} from "../../utils";
 
-    const ARROW_LEFT = 'ArrowLeft';
-    const ARROW_RIGHT = 'ArrowRight';
-    const ARROW_DOWN = 'ArrowDown';
-    const ARROW_UP = 'ArrowUp';
 
     export default {
         name: "tetris",
@@ -231,7 +237,7 @@
                     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-                ],
+                ];
                 this.count = 0;
                 this.level = 1;
                 this.gameOver = false;
@@ -311,6 +317,10 @@
                 this.isStopGame = !this.isStopGame;
             },
             onKeyDown(e) {
+                console.log(e.code);
+                if (e.code === SPACE) {
+                    this.toggleGame();
+                }
                 if (e.code === ARROW_LEFT) {
                     this.canMoveLeft().then(fine => {
                         if (fine === 0) {
@@ -545,6 +555,6 @@
 </script>
 
 <style scoped lang="less">
-    @import "../styles/tetris";
+    @import "../../styles/tetris";
 
 </style>
