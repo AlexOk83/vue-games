@@ -3,6 +3,7 @@ import Tetris from './pages/tetris'
 import Pjathashki from './pages/pjatnashki'
 import Home from './pages/home'
 import TicTac from './pages/ticTacToe'
+import MinkuBarricade from './pages/Minku-barricade'
 
 
 export default new VueRouter({
@@ -27,6 +28,11 @@ export default new VueRouter({
             name: 'Крестики - нолики',
             path: '/game3',
             component: TicTac,
+        },
+        {
+            name: 'Баррикады',
+            path: '/game4',
+            component: MinkuBarricade,
         },
     ],
 })
