@@ -28,5 +28,5 @@ export function randomInt(min, max) {
 }
 
 export function isNil(el) {
-    return el === undefined
+    return el === undefined || el === null
 }

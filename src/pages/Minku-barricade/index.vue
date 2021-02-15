@@ -8,19 +8,10 @@
                 <div class="field" :class="getFieldClasses(box)" v-for="box in line" />
             </div>
         </div>
-        <div :class="['dice', 'dice--red', `dice-count--${countRed}`]" >
-            <div class="point" v-for="point in countRed"/>
-        </div>
-        <div :class="['dice', 'dice--green', `dice-count--${countGreen}`]" >
-            <div class="point" v-for="point in countGreen"/>
-        </div>
-        <div :class="['dice', 'dice--yellow', `dice-count--${countYellow}`]" >
-            <div class="point" v-for="point in countYellow"/>
-        </div>
-        <div :class="['dice', 'dice--blue', `dice-count--${countBlue}`]" >
-            <div class="point" v-for="point in countBlue"/>
-        </div>
-
+        <Dice class-modify="red" />
+        <Dice class-modify="blue" />
+        <Dice class-modify="yellow" />
+        <Dice class-modify="green" />
     </div>
 
 
@@ -28,9 +19,11 @@
 
 <script>
     import { CLEARED_MAP, GAME_FIELD } from './constants'
+    import Dice from "./dice";
 
     export default {
         name: "Minku-Barricade",
+        components: {Dice},
         data() {
             return {
                 field: GAME_FIELD,

@@ -1,4 +1,13 @@
 @background: #c3582e;
+
+@keyframes roll {
+  0%{
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
 // карта
 .map-game {
   display: block;
@@ -135,6 +144,41 @@
   border-radius: 5px;
   box-shadow: inset 0 0 15px rgba(black, 0.5);
 
+  &--wait {
+    animation-name: roll;
+    animation-direction: normal;
+    animation-fill-mode: forwards;
+    animation-iteration-count: infinite;
+    animation-duration: 1s;
+    .point {
+      &:nth-child(1) {
+        top: 10px;
+        left: 10px;
+      }
+      &:nth-child(2) {
+        top: 10px;
+        right: 10px;
+      }
+      &:nth-child(3) {
+        bottom: 10px;
+        left: 10px;
+      }
+      &:nth-child(4) {
+        bottom: 10px;
+        right: 10px;
+      }
+      &:nth-child(5) {
+        top: 50%;
+        right: 10px;
+        margin-top: -4px;
+      }
+      &:nth-child(6) {
+        top: 50%;
+        left: 10px;
+        margin-top: -4px;
+      }
+    }
+  }
   &.started {
     cursor: pointer;
   }

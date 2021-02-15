@@ -555,6 +555,6 @@
 </script>
 
 <style scoped lang="less">
-    @import "../../styles/tetris";
+    @import "styles";
 
 </style>
